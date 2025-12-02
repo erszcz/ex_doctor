@@ -31,4 +31,30 @@ defmodule ExDoctor do
   for {name, fields} <- @records do
     Record.defrecord(name, fields)
   end
+
+  def fields(record) when record in [:tr, :node] do
+    Keyword.keys(@records[record])
+  end
+
+  def to_map(t) when Record.is_record(t, :tr) do
+    %{
+      index: tr(t, :index),
+      pid: tr(t, :pid),
+      event: tr(t, :event),
+      mfa: tr(t, :mfa),
+      data: tr(t, :data),
+      ts: tr(t, :ts),
+      info: tr(t, :info)
+    }
+  end
+
+  def to_map(n) when Record.is_record(n, :node) do
+    %{
+      module: node(n, :module),
+      function: node(n, :function),
+      args: node(n, :args),
+      children: node(n, :children),
+      result: node(n, :result)
+    }
+  end
 end
